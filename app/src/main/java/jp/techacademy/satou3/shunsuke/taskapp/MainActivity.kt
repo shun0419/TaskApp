@@ -37,11 +37,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        if(category_edit_text.text.isEmpty()){
-            search_button.isEnabled = false
-        }
-
-
 
         // Realmの設定
         mRealm = Realm.getDefaultInstance()
@@ -70,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             builder.setTitle("削除")
             builder.setMessage(task.title + "を削除しますか")
 
-            builder.setPositiveButton("OK"){_, _ ->
+            builder.setPositiveButton("OK") { _, _ ->
                 val results = mRealm.where(Task::class.java).equalTo("id", task.id).findAll()
 
                 mRealm.beginTransaction()
@@ -100,6 +95,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         reloadListView()
+
+        search_button.setOnClickListener {
+            if (category_edit_text.text.isEmpty()) {
+                //                 Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
+                var taskRealmResults = mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
+            }else{
+                var taskRealmResults = mRealm.where(Task::class.java).equalTo("category", category_edit_text.toString()).findAll().sort("date", Sort.DESCENDING)
+            }
+        }
     }
 
 
@@ -107,16 +111,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
     private fun reloadListView() {
-
-
-//                 Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
-            var taskRealmResults = mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
-
-        search_button.setOnClickListener {
-            var taskRealmResults = mRealm.where(Task::class.java).equalTo("category",category_edit_text.toString()).findAll().sort("date",Sort.DESCENDING)
-        }
 
 
             // 上記の結果を、TaskList としてセットする
