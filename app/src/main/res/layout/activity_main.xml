@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/category_edit_text"
-                android:text="検索したいカテゴリを入力してください"
+                android:hint="検索したいカテゴリを入力してください"
                 />
 
             <Button
