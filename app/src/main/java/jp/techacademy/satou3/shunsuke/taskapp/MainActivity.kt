@@ -10,11 +10,15 @@ import io.realm.RealmChangeListener
 import io.realm.Sort
 import android.content.Intent
 import android.support.v7.app.AlertDialog
+import android.view.View
+import io.realm.kotlin.where
 import java.util.*
 
 const val EXTRA_TASK = "jp.techacademy.satou3.shunsuke.taskapp.TASK"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+
     private lateinit var mRealm: Realm
     private val mRealmListener = object : RealmChangeListener<Realm> {
         override fun onChange(element: Realm) {
@@ -32,6 +36,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, InputActivity::class.java)
             startActivity(intent)
         }
+
+        if(category_edit_text.text.isEmpty()){
+            search_button.isEnabled = false
+        }
+
+        search_button.setOnClickListener(this)
 
         // Realmの設定
         mRealm = Realm.getDefaultInstance()
@@ -94,16 +104,22 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        private fun reloadListView() {
 
-            if(category_edit_text == null) {
+
+
+
+    private fun reloadListView() {
+
+
+
+
+
 //                 Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
-                val taskRealmResults = mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
-            }else {
-//                Todo category_edit_textの入力から抽出する
-                
+            var taskRealmResults = mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
 
-            }
+        fun onClick(p0: View?) {
+            var taskRealmResults = mRealm.where(Task::class.java).equalTo("category",category_edit_text.toString()).findAll().sort("date",Sort.DESCENDING)
+        }
 
 
             // 上記の結果を、TaskList としてセットする
