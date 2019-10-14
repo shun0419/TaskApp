@@ -11,7 +11,9 @@ import io.realm.Sort
 import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.view.View
+import android.widget.Adapter
 import io.realm.kotlin.where
+import jp.techacademy.satou3.shunsuke.taskapp.R.id.fab
 import java.util.*
 
 const val EXTRA_TASK = "jp.techacademy.satou3.shunsuke.taskapp.TASK"
@@ -97,22 +99,19 @@ class MainActivity : AppCompatActivity() {
         reloadListView()
 
         search_button.setOnClickListener {
-            if (category_edit_text.text.isEmpty()) {
-                //                 Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
-                var taskRealmResults = mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
-            }else{
-                var taskRealmResults = mRealm.where(Task::class.java).equalTo("category", category_edit_text.toString()).findAll().sort("date", Sort.DESCENDING)
-            }
+            reloadListView()
         }
     }
 
 
-
-
-
-
     private fun reloadListView() {
 
+        var taskRealmResults = if (category_edit_text.text.isEmpty()) {
+            //                 Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
+              mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
+        }else{
+             mRealm.where(Task::class.java).equalTo("category", category_edit_text.toString()).findAll().sort("date", Sort.DESCENDING)
+        }
 
             // 上記の結果を、TaskList としてセットする
             mTaskAdapter.taskList = mRealm.copyFromRealm(taskRealmResults)
