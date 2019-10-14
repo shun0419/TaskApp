@@ -29,6 +29,7 @@ class InputActivity : AppCompatActivity() {
                     mYear = year
                     mMonth = month
                     mDay = dayOfMonth
+
                     val dateString = mYear.toString() + "/" + String.format("%02d", mMonth + 1) + "/" + String.format("%02d", mDay)
                     date_button.text = dateString
                 }, mYear, mMonth, mDay)
@@ -86,6 +87,8 @@ class InputActivity : AppCompatActivity() {
             // 更新の場合
             title_edit_text.setText(mTask!!.title)
             content_edit_text.setText(mTask!!.contents)
+//             カテゴリーを追加
+            category_edit_text.setText(mTask!!.category)
 
             val calendar = Calendar.getInstance()
             calendar.time = mTask!!.date
